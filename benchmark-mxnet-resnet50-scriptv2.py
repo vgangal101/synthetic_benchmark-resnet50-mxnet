@@ -34,14 +34,16 @@ def main():
 
   mod = mx.mod.Module(symbol=sym,context=dev)
   mod.bind(for_training=False,inputs_need_grad=False,data_shapes=data_shape) 
+  mod.init_params(initializer=mx.init.Xavier(magnitude=2.))
 
   # get fake data
   data = [mx.random.uniform(-1.0,1.0,shape=shape,ctx=dev) for _,shape in mod.data_shapes]
   DataBatch = mx.io.DataBatch(data,[]) # empty labels
   
   #training loop
-  train(mod,DataBatch,num_batches,batch_size)
+  speed=train(mod,DataBatch,num_batches,batch_size)
 
+  print('batch size %2d, dtype %s, images/sec: %f' % (batch_size, dtype, speed))
 
 def train(mod,DataBatch,num_batches,batch_size):
   dry_run = 5
@@ -51,8 +53,8 @@ def train(mod,DataBatch,num_batches,batch_size):
       mod.forward(DataBatch,is_train=False)
       for output in mod.get_outputs():
           output.wait_to_read()
-  print('batch number #%d img/sec=%f' %(i,(num_batches*batch_size/time.time()-tic)))
+  return num_batches*batch_size/(time.time() - tic)
+
 
 if __name__ == '__main__':
   main()
-
