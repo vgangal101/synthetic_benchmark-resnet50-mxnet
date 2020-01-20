@@ -55,6 +55,5 @@ def train(mod,DataBatch,num_batches,batch_size):
           output.wait_to_read()
   return num_batches*batch_size/(time.time() - tic)
 
-
 if __name__ == '__main__':
   main()

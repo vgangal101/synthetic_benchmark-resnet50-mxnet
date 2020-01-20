@@ -2,7 +2,7 @@ from common import find_mxnet
 from common.util import get_gpus
 import mxnet as mx
 import mxnet.gloun.module_zoo.vision as vision
-from gluoncn.model_zoo import get model
+from gluoncn.model_zoo import get_model
 from importlib import import_module 
 import logging
 import argparse
